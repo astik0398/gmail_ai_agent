@@ -42,7 +42,7 @@ const ChatBot = () => {
                     value={recipient}
                     onChange={(e) => setRecipient(e.target.value)}
                     placeholder="Enter recipient email"
-                    style={{padding:'10px', borderRadius:'10px', width:'200px'}}
+                    style={{padding:'10px', borderRadius:'10px', width:'60%'}}
                 />
             </div>
             <div style={{marginBottom:'10px'}}>
@@ -51,10 +51,10 @@ const ChatBot = () => {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Send a mail about the best phones under 20k..."
-                    style={{padding:'10px', borderRadius:'10px', width:'200px'}}
+                    style={{padding:'10px', borderRadius:'10px', width:'60%'}}
                 />
             </div>
-            <button style={{padding:'5px', width:'200px', borderRadius:'10px'}} onClick={handleSendEmail}>Send Email</button>
+            <button style={{padding:'5px', width:'60%', borderRadius:'10px'}} onClick={handleSendEmail}>Send Email</button>
         </div>
     );
 };

@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  width: 30%;
 }
 
 .App-logo {
@@ -10,6 +11,12 @@
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@media (max-width: 768px) {
+  .App {
+    width: 80%;
   }
 }
 

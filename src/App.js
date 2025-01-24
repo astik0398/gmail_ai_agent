@@ -4,7 +4,7 @@ import ChatBot from './ChatBot';
 
 function App() {
   return (
-    <div style={{border:'1px solid black', width:'30%', margin:'auto', marginTop:'250px'}} className="App">
+    <div style={{border:'1px solid black', margin:'auto', marginTop:'200px'}} className="App">
       <ChatBot/>
     </div>
   );
