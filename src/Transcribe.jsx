@@ -19,56 +19,49 @@ function Transcribe() {
   };
 
   // Upload the file to Supabase and get the public URL
-  const uploadAudioFile = async (file) => {
-    const sanitizedFileName = file.name.replace(/[^\w\s]/gi, '_').replace(/\s+/g, '_');  // Sanitizing the file name
-const filePath = `${Date.now()}-${sanitizedFileName}`;  // Unique file name
-console.log('filePath', filePath);
+//   const uploadAudioFile = async (file) => {
+//     const sanitizedFileName = file.name.replace(/[^\w\s]/gi, '_').replace(/\s+/g, '_');  // Sanitizing the file name
+// const filePath = `${Date.now()}-${sanitizedFileName}`;  // Unique file name
+// console.log('filePath', filePath);
 
-    try {
-      // Upload the file to Supabase storage
-      const { data, error } = await supabase.storage
-        .from('audio')
-        .upload(filePath, audioFile);
+//     try {
+//       // Upload the file to Supabase storage
+//       const { data, error } = await supabase.storage
+//         .from('audio')
+//         .upload(filePath, audioFile);
 
-        console.log('we are here------>  1');
+//         console.log('we are here------>  1');
 
-        console.log('Upload response:', data);  // Log data returned from upload
-    console.log('Supabase upload error:', error);
+//         if (error) {
+//             console.error("Supabase upload error:", error);
+//             throw new Error('Error uploading audio to Supabase');
+//           }
 
-        if (error) {
-            console.error("Supabase upload error:", error);
-            throw new Error('Error uploading audio to Supabase');
-          }
+//           console.log('we are here------>  2');
 
-          console.log('we are here------>  2');
+//       // Get the public URL of the uploaded file
+//       const { publicURL, error: urlError } = supabase.storage
+//         .from('audio')
+//         .getPublicUrl(filePath);
 
-      // Get the public URL of the uploaded file
-    //   const { publicURL, error: urlError } = supabase.storage
-    //     .from('audio')
-    //     .getPublicUrl(data.fullPath);
+//         console.log('we are here------>  3');
 
-    //     console.log('we are here------>  3');
+//       if (urlError) {
+//         console.log('we are here------>  4');
 
-    //   if (urlError) {
-    //     console.log('we are here------>  4');
-    //     console.log('Error retriving url', urlError);
-        
-    //     throw new Error('Error retrieving public URL from Supabase');
-    //   }
+//         throw new Error('Error retrieving public URL from Supabase');
+//       }
 
-      console.log('we are here------>  5');
+//       console.log('we are here------>  5');
 
-
-      const publicURL = `https://rstoqslkyzlydtamvdnn.supabase.co/storage/v1/object/public/${data.fullPath}`
+//       console.log('publicURL',publicURL);
       
-      console.log('publicURL',publicURL);
-
-      return publicURL; // Return the public URL of the uploaded file
-    } catch (err) {
-      console.error(err);
-      throw new Error('Error uploading audio to Supabase');
-    }
-  };
+//       return publicURL; // Return the public URL of the uploaded file
+//     } catch (err) {
+//       console.error(err);
+//       throw new Error('Error uploading audio to Supabase');
+//     }
+//   };
 
   // Handle form submission
   const handleSubmit = async (event) => {
@@ -83,7 +76,7 @@ console.log('filePath', filePath);
       setError(null);
 
       // Step 1: Upload the audio file to Supabase and get the audio URL
-      const audioUrl = await uploadAudioFile(audioFile);
+      const audioUrl = "https://rstoqslkyzlydtamvdnn.supabase.co/storage/v1/object/public/audio//3_13_2025,%209_09_35%20PM.mp3"
 
       // Step 2: Send the audio URL to Wordware API
       const apiKey = 'ww-9CTz77OQJ36ebmDirGWUvxSyOMbrai47CiFq3JhAFKEPFpUyOUcdM5'; // Replace with your Wordware API key
