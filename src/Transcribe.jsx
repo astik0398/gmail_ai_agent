@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import axios from 'axios';
 
-// Initialize Supabase client
 const supabaseUrl = 'https://rstoqslkyzlydtamvdnn.supabase.co';  // Replace with your Supabase URL
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzdG9xc2xreXpseWR0YW12ZG5uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA2NjQ5MjIsImV4cCI6MjA1NjI0MDkyMn0.hy38O849pB4Mlb8y_PqK7-OqqZiPTv79YnOV7xYOxD4'; // Replace with your Supabase public anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -12,58 +11,64 @@ function Transcribe() {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [responsesArray, setResponsesArray] = useState([]);  // State for storing an array of responses
 
-  // Handle file selection
+  const [newGeneration, setNewGeneration] = useState('');  // State for new_generation
+
   const handleFileChange = (event) => {
     setAudioFile(event.target.files[0]);
   };
 
-  // Upload the file to Supabase and get the public URL
-//   const uploadAudioFile = async (file) => {
-//     const sanitizedFileName = file.name.replace(/[^\w\s]/gi, '_').replace(/\s+/g, '_');  // Sanitizing the file name
-// const filePath = `${Date.now()}-${sanitizedFileName}`;  // Unique file name
-// console.log('filePath', filePath);
+  const uploadAudioFile = async (file) => {
+    const sanitizedFileName = file.name.replace(/[^\w\s]/gi, '_').replace(/\s+/g, '_'); 
+const filePath = `${Date.now()}-${sanitizedFileName}`; 
+console.log('filePath', filePath);
 
-//     try {
-//       // Upload the file to Supabase storage
-//       const { data, error } = await supabase.storage
-//         .from('audio')
-//         .upload(filePath, audioFile);
+    try {
+      const { data, error } = await supabase.storage
+        .from('audio')
+        .upload(filePath, audioFile);
 
-//         console.log('we are here------>  1');
+        console.log('we are here------>  1');
 
-//         if (error) {
-//             console.error("Supabase upload error:", error);
-//             throw new Error('Error uploading audio to Supabase');
-//           }
+        console.log('Upload response:', data);  // Log data returned from upload
+    console.log('Supabase upload error:', error);
 
-//           console.log('we are here------>  2');
+        if (error) {
+            console.error("Supabase upload error:", error);
+            throw new Error('Error uploading audio to Supabase');
+          }
 
-//       // Get the public URL of the uploaded file
-//       const { publicURL, error: urlError } = supabase.storage
-//         .from('audio')
-//         .getPublicUrl(filePath);
+          console.log('we are here------>  2');
 
-//         console.log('we are here------>  3');
+      // Get the public URL of the uploaded file
+    //   const { publicURL, error: urlError } = supabase.storage
+    //     .from('audio')
+    //     .getPublicUrl(data.fullPath);
 
-//       if (urlError) {
-//         console.log('we are here------>  4');
+    //     console.log('we are here------>  3');
 
-//         throw new Error('Error retrieving public URL from Supabase');
-//       }
+    //   if (urlError) {
+    //     console.log('we are here------>  4');
+    //     console.log('Error retriving url', urlError);
+        
+    //     throw new Error('Error retrieving public URL from Supabase');
+    //   }
 
-//       console.log('we are here------>  5');
+      console.log('we are here------>  5');
 
-//       console.log('publicURL',publicURL);
+
+      const publicURL = `https://rstoqslkyzlydtamvdnn.supabase.co/storage/v1/object/public/${data.fullPath}`
       
-//       return publicURL; // Return the public URL of the uploaded file
-//     } catch (err) {
-//       console.error(err);
-//       throw new Error('Error uploading audio to Supabase');
-//     }
-//   };
+      console.log('publicURL',publicURL);
 
-  // Handle form submission
+      return publicURL; 
+    } catch (err) {
+      console.error(err);
+      throw new Error('Error uploading audio to Supabase');
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!audioFile) {
@@ -75,37 +80,53 @@ function Transcribe() {
       setLoading(true);
       setError(null);
 
-      // Step 1: Upload the audio file to Supabase and get the audio URL
-      const audioUrl = "https://rstoqslkyzlydtamvdnn.supabase.co/storage/v1/object/public/audio//3_13_2025,%209_09_35%20PM.mp3"
+      const audioUrl = await uploadAudioFile(audioFile);
 
-      // Step 2: Send the audio URL to Wordware API
-      const apiKey = 'ww-9CTz77OQJ36ebmDirGWUvxSyOMbrai47CiFq3JhAFKEPFpUyOUcdM5'; // Replace with your Wordware API key
+      const apiKey = 'ww-9CTz77OQJ36ebmDirGWUvxSyOMbrai47CiFq3JhAFKEPFpUyOUcdM5';
       const requestBody = {
         inputs: {
           voice_over: {
             type: 'audio',
-            audio_url: audioUrl, // Use the audio URL from Supabase
-            transcript: "Your transcript here" // Optional, add your transcript text
+            audio_url: audioUrl, 
+            transcript: "Your transcript here"
           }
         },
         version: '^1.0'
       };
 
-      // Step 3: Make the request to the Wordware API
       const response = await axios.post(
         'https://cors-anywhere.herokuapp.com/https://app.wordware.ai/api/released-app/d563e981-8c21-4b38-8201-45f319e4aac9/run',
         requestBody,
         {
           headers: {
             'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json', // Sending JSON data
+            'Content-Type': 'application/json', 
           },
         }
       );
 
       setLoading(false);
       setResponse(response.data);
-      console.log(response.data);
+      console.log(response);
+
+      setResponsesArray((prev)=> [...prev, response.data])
+
+      const responseValue = response.data.trim().split('\n');
+
+      let parsedChunks = responseValue.map(chunk => JSON.parse(chunk));
+
+
+      console.log('responseValue', responseValue);
+      console.log('parsedChunks', parsedChunks);
+      console.log('parsedChunks length', parsedChunks[parsedChunks.length-1].value.values.new_generation);
+
+
+      // const transcript =
+      //   response.data?.find(chunk => chunk.value?.type === 'tool' && chunk.value?.label === 'Speech-to-text with Deepgram')?.value?.output?.transcript || '';
+      // const newGeneration =
+      //   response.data?.find(chunk => chunk.value?.type === 'generation' && chunk.value?.label === 'new_generation')?.value || '';
+      
+      setNewGeneration(parsedChunks[parsedChunks.length-1].value.values.new_generation);
       
     } catch (error) {
       setLoading(false);
@@ -132,8 +153,10 @@ function Transcribe() {
 
       {response && (
         <div>
-          <h2>Response from Wordware:</h2>
-          <pre>{JSON.stringify(response, null, 2)}</pre>
+          <div>
+            <h2>Audio Summary:</h2>
+            <p>{newGeneration}</p>
+          </div>
         </div>
       )}
     </div>

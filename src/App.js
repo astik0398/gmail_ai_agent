@@ -5,7 +5,7 @@ import Transcribe from './Transcribe';
 
 function App() {
   return (
-    <div style={{border:'1px solid black', margin:'auto', marginTop:'200px', padding:'50px'}} className="App">
+    <div style={{border:'1px solid black', margin:'auto', marginTop:'150px', padding:'50px'}} className="App">
       {/* <ChatBot/> */}
       <Transcribe/>
     </div>
