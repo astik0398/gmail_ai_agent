@@ -120,7 +120,13 @@ console.log('filePath', filePath);
       console.log('parsedChunks', parsedChunks);
       console.log('parsedChunks length', parsedChunks[parsedChunks.length-1].value.values.new_generation);
 
+      const cleanText = parsedChunks[parsedChunks.length-1].value.values['Speech-to-text with Deepgram'].output.transcript
+      console.log('actual audio--->', cleanText);
 
+      const cleanedTranscript = cleanText.replace(/^\n?Speaker \d+: /, '').trim();
+
+      console.log(cleanedTranscript);
+      
       // const transcript =
       //   response.data?.find(chunk => chunk.value?.type === 'tool' && chunk.value?.label === 'Speech-to-text with Deepgram')?.value?.output?.transcript || '';
       // const newGeneration =
